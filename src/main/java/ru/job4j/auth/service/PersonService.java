@@ -13,6 +13,7 @@ public class PersonService {
     private final PersonRepository personRepository;
 
     public Person create(Person person) {
+        person.setChecked(true);
         return personRepository.save(person);
     }
     public void delete(Person person) {

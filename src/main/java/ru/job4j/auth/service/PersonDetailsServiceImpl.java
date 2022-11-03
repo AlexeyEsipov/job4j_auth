@@ -7,8 +7,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.job4j.auth.domain.Person;
 
-import java.util.Optional;
-
 import static java.util.Collections.emptyList;
 
 @Service
@@ -21,10 +19,8 @@ public class PersonDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        Optional<Person> user = personService.findByLogin(login);
-        if (user.isEmpty()) {
-            throw new UsernameNotFoundException(login);
-        }
-        return new User(user.get().getLogin(), user.get().getPassword(), emptyList());
+        Person person = personService.findByLogin(login)
+                .orElseThrow(() -> new UsernameNotFoundException(login));
+        return new User(person.getLogin(), person.getPassword(), emptyList());
     }
 }
