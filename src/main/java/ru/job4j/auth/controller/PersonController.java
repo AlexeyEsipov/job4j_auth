@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +26,8 @@ import ru.job4j.auth.service.PersonService;
 public class PersonController {
     private static final String LOGIN_INVALID = "Login is incorrect";
     private static final String PASSWORD_INVALID = "Password is incorrect";
-    private static final Logger LOGGER = LoggerFactory.getLogger(PersonController.class.getSimpleName());
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(PersonController.class.getSimpleName());
     private final PersonService persons;
     private final BCryptPasswordEncoder encoder;
     private final ObjectMapper objectMapper;
@@ -46,7 +48,7 @@ public class PersonController {
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<Person> create(@RequestBody PersonDTO personDTO) {
+    public ResponseEntity<Person> create(@Valid @RequestBody PersonDTO personDTO) {
         String login = personDTO.getLogin();
         String password = personDTO.getPassword();
         if (isInvalidLogin(login)) {
@@ -64,7 +66,7 @@ public class PersonController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<Void> update(@RequestBody PersonDTO personDTO) {
+    public ResponseEntity<Void> update(@Valid @RequestBody PersonDTO personDTO) {
         if (isInvalidLogin(personDTO.getLogin())) {
             throw new IllegalArgumentException(LOGIN_INVALID);
         }
@@ -129,16 +131,13 @@ public class PersonController {
     }
 
     private boolean isInvalidLogin(String login) {
-        return login.length() < 6
-                || login.length() > 20
-                || !Character.isLetter(login.charAt(0))
+        return  !Character.isLetter(login.charAt(0))
                 || login.contains(" ");
     }
 
     private boolean isInvalidPassword(String password) {
         password = password.toLowerCase();
-        return password.length() < 8
-                || password.contains("12345")
+        return password.contains("12345")
                 || password.contains("user")
                 || password.contains("password")
                 || password.contains("qwerty")
