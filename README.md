@@ -3,6 +3,7 @@
 ![github actions](https://github.com/AlexeyEsipov/job4j_auth/actions/workflows/maven.yml/badge.svg)
 
 Простой проект с демонстрацией работы REST
+
 RestFull API архитектура - это архитектура клиент-серверного приложения базирующаяся на 6 принципах.
 
 1. Универсальный интерфейс взаимодействия. (Uniform Interface)
